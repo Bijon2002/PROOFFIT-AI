@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROOFFIT AI | Enterprise Data Readiness Assessment</title>
+  <meta name="description" content="Know your data before you trust your AI. Deterministic, privacy-first data readiness evaluation engine.">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="brand-icon">P</div>
+        <div>
+          <div class="brand-title">PROOFFIT AI</div>
+          <div class="brand-subtitle">Data Readiness Engine</div>
+        </div>
+      </div>
+      <div class="nav-status">
+        <span class="status-badge">
+          <span class="status-dot"></span>
+          <span>Engine Active</span>
+        </span>
+        <a href="/docs" target="_blank" class="btn-secondary" style="text-decoration:none;font-size:12px;padding:6px 12px;">API Docs</a>
+      </div>
+    </header>
+
+    <!-- Stepper Navigation -->
+    <div class="stepper">
+      <div class="step-item active" id="stepIndicator1">
+        <div class="step-bubble">1</div>
+        <div class="step-label">Select & Ingest</div>
+      </div>
+      <div class="step-item" id="stepIndicator2">
+        <div class="step-bubble">2</div>
+        <div class="step-label">Schema Alignment</div>
+      </div>
+      <div class="step-item" id="stepIndicator3">
+        <div class="step-bubble">3</div>
+        <div class="step-label">Executive Audit</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: Select AI Task & Ingest Data -->
+    <section class="glass-card" id="step1Container">
+      <div class="section-header">
+        <h2 class="section-title">1. Select AI Use Case & Upload Dataset</h2>
+        <p class="section-desc">Choose your target machine learning task. PROOFFIT AI tests against domain-specific health standards.</p>
+      </div>
+
+      <div class="use-case-grid" id="useCaseGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="upload-dropzone" id="dropzone">
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">Drag & drop your CSV file here, or click to browse</div>
+        <div class="upload-subtext">Supports up to 100 MB. Zero data is stored or logged.</div>
+        <input type="file" id="fileInput" accept=".csv" style="display:none">
+        
+        <div class="file-info-bar hidden" id="fileInfoBar">
+          <div class="file-info-name">
+            <span>📄</span>
+            <span id="fileNameLabel">filename.csv</span>
+            <span class="field-pill" id="fileSizeLabel">0 KB</span>
+          </div>
+          <button type="button" class="btn-secondary" id="btnChangeFile" style="padding:4px 10px;font-size:11px;">Change File</button>
+        </div>
+      </div>
+
+      <div class="demo-presets">
+        <span class="demo-title">Or test with pre-built data:</span>
+        <button type="button" class="btn-demo" id="btnDemoRetail">🛒 Load Retail Demand Sample (8.7k rows)</button>
+        <button type="button" class="btn-demo" id="btnDemoChurn">👥 Load Churn Sample (2.5k rows)</button>
+      </div>
+
+      <div class="error-msg hidden" id="step1Error"></div>
+
+      <div style="margin-top:24px;display:flex;justify-content:flex-end;">
+        <button type="button" class="btn-primary" id="btnToStep2">
+          <span>Continue to Schema Mapping</span>
+          <span>→</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- STEP 2: Schema Alignment & Column Mapping -->
+    <section class="glass-card hidden" id="step2Container">
+      <div class="section-header">
+        <h2 class="section-title">2. Validate Schema & Canonical Mapping</h2>
+        <p class="section-desc">Our heuristic & LLM agent suggested column alignments. Validate them before running diagnostic checks.</p>
+      </div>
+
+      <div class="privacy-banner">
+        <span>🛡️</span>
+        <div><strong>Zero Raw Data Exposure:</strong> Only column names, data types, and sanitized sample patterns leave the local boundary.</div>
+      </div>
+
+      <div class="mapping-grid" id="mappingGrid">
+        <!-- Dynamic mapping cards -->
+      </div>
+
+      <!-- Dataset Preview Table -->
+      <details class="preview-box">
+        <summary style="cursor:pointer;font-weight:600;font-size:13px;color:var(--text-secondary);outline:none;">
+          🔍 Preview First 5 Data Rows (<span id="previewStats">0 rows, 0 columns</span>)
+        </summary>
+        <div style="margin-top:12px;overflow-x:auto;">
+          <table class="preview-table" id="previewTable">
+            <thead id="previewTableHead"></thead>
+            <tbody id="previewTableBody"></tbody>
+          </table>
+        </div>
+      </details>
+
+      <div class="error-msg hidden" id="step2Error"></div>
+
+      <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:center;">
+        <button type="button" class="btn-secondary" id="btnBackToStep1">
+          <span>←</span>
+          <span>Back</span>
+        </button>
+        <button type="button" class="btn-primary" id="btnRunAssessment">
+          <span>Run Readiness Assessment</span>
+          <span>⚡</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- STEP 3: Executive Readiness Report -->
+    <section class="glass-card hidden" id="step3Container">
+      <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <h2 class="section-title">3. Executive Data Readiness Audit</h2>
+          <p class="section-desc" id="reportHeaderDesc">Comprehensive evaluation for your AI use case.</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn-secondary" id="btnPrintReport">🖨️ Export PDF</button>
+          <button type="button" class="btn-secondary" id="btnDownloadJson">💾 Export JSON</button>
+        </div>
+      </div>
+
+      <!-- Hero Dashboard Score Card -->
+      <div class="score-dashboard">
+        <!-- SVG Gauge -->
+        <div class="score-circle-container">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg"
+              d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+            />
+            <path class="circle" id="scoreCircleProgress"
+              stroke="#10b981"
+              stroke-dasharray="0, 100"
+              d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+            />
+            <text x="18" y="20.35" class="score-text" id="scoreTextValue">0</text>
+            <text x="18" y="26" class="score-label-sub">/ 100</text>
+          </svg>
+        </div>
+
+        <!-- Executive Narrative -->
+        <div class="verdict-info">
+          <div class="verdict-badge verdict-ready" id="verdictBadge">Production Ready</div>
+          <p class="executive-summary-text" id="executiveSummaryText">Analyzing findings...</p>
+        </div>
+
+        <!-- Key Stats Matrix -->
+        <div class="metrics-matrix">
+          <div class="metric-tile">
+            <div class="metric-tile-label">Rows Analysed</div>
+            <div class="metric-tile-val" id="metricRows">0</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-tile-label">Confidence</div>
+            <div class="metric-tile-val" id="metricConfidence">High</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-tile-label">Passed Checks</div>
+            <div class="metric-tile-val" id="metricPassedChecks">0/0</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-tile-label">Blockers</div>
+            <div class="metric-tile-val" id="metricBlockers" style="color:var(--color-fail);">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Critical Blockers Accordion (if any) -->
+      <div id="blockersContainer" class="blockers-section hidden">
+        <h3 style="font-size:16px;color:#fca5a5;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+          <span>⚠️</span>
+          <span>Critical Remediation Items Required Before Modeling</span>
+        </h3>
+        <div id="blockersList"></div>
+      </div>
+
+      <!-- Comprehensive Health Checks -->
+      <div style="margin-top:28px;">
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text-primary);">
+          Diagnostic Health Checks
+        </h3>
+        <div class="checks-grid" id="checksGrid">
+          <!-- Dynamic check cards -->
+        </div>
+      </div>
+
+      <!-- Dataset Profile Breakdown -->
+      <div style="margin-top:28px;background:var(--bg-secondary);padding:18px;border-radius:var(--radius-md);border:1px solid var(--card-border);">
+        <h4 style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:10px;">
+          Dataset Vital Statistics
+        </h4>
+        <div style="display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--text-secondary);" id="profileVitals">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <div style="margin-top:32px;display:flex;justify-content:space-between;">
+        <button type="button" class="btn-secondary" id="btnRestart">
+          <span>🔄 Assess Another Dataset</span>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
